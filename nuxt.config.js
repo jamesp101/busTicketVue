@@ -30,7 +30,7 @@ export default {
     {
         src: '@/plugins/vuelayers.js',
         ssr: false
-    }
+    },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -56,7 +56,6 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    baseURL: process.env.BASE_URL || 'http://0.0.0.0:1337'
   },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
@@ -79,5 +78,8 @@ export default {
       solid: ['faHome']
 
     }
+  },
+  strapi: {
+    url : process.env.STRAPI_URL || 'http://192.168.254.103:1337'
   }
 }

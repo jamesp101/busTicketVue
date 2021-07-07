@@ -1,7 +1,8 @@
+
 <template>
   <div class="w-full h-screen bg-white app-grid">
     <nav class="col-start-1 col-end-13
-      bg-white
+      bg-red-400
       shadow-lg
       sticky">
 
@@ -15,7 +16,7 @@
         />
       </button>
       <div class="grid place-content-center">
-        <h1 class="">Pabama Online</h1>
+        <h1 class="text-white subpixel-antialiased">PABAMA Conductor app</h1>
       </div>
 
       </div>
@@ -23,7 +24,6 @@
 
       <div class="float-right h-full  w-auto mr-0 md:mr-4
         grid place-content-center">
-        <Coins class="my-auto"></Coins>
       </div>
 
     </nav>
@@ -82,7 +82,6 @@
 <script>
 
   import { faBars, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
-  import  Coins  from '~/components/Coins.vue'
 
 
 
@@ -117,11 +116,10 @@
 
 
     components : {
-      Coins
 
     },
 
-    
+
 
     data() {
       return {
@@ -129,24 +127,12 @@
 
         links : [
           {
-            to: '/app',
+            to: '/conductor',
             title: 'Dashboard'
           },
           {
-            to: '/app/ticket',
-            title: 'Your tickets'
-          },
-          {
-            to: '/app/purchase',
-            title: 'Purchase Ticket'
-          },
-          {
-            to: '/app/topup',
-            title: 'Top-up'
-          },
-          {
-            to: '/app/account',
-            title: 'Account'
+            to: '/conductor/scan',
+            title: 'Scan'
           },
 
 

@@ -64,6 +64,11 @@
       title: "Login"
     },
 
+    beforeMount() {
+      this.rerouteUsers()
+
+    },
+
     methods: {
       async onLogin(){
         try{
@@ -71,12 +76,25 @@
             identifier: this.identifier,
             password: this.password
           });
-          // TODO: smart routing based on user type
-          this.$router.push('/app');
+          this.rerouteUsers();
         }catch{
           alert("Username or password not found");
         }
 
+      },
+      rerouteUsers() {
+        if (this.$strapi.user == null ){
+          return;
+        }
+        console.log(this.$strapi.user)
+        if(this.$strapi.user.role.id==3){
+          this.$router.push('/conductor/')
+          return
+        }
+        if(this.$strapi.user.role.id==1){
+          this.$router.push('/app/')
+          return
+        }
       }
     },
 

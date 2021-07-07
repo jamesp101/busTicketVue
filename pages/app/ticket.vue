@@ -11,7 +11,7 @@
     <div v-else-if="isEmpty && !isLoading" class="grid place-content-center text-center h-full w-full">
 
       <font-awesome-icon :icon=faExclamation
-      class="text-2xl text-gray-200 h-full"/>
+        class="text-2xl text-gray-200 h-full"/>
 
       <h1 class="text-gray-500 mt-20">You have no tickets recorded.</h1>
       <nuxt-link to="/app/purchase" class="text-red-400">Purchase tickets here</nuxt-link>
@@ -43,9 +43,9 @@
       <div class="h-full w-full lg:w-3/12 ">
         <h1>Your Tickets</h1>
 
-        <ul class="overflow-auto">
+        <ul class="overflow-auto ">
           <li v-for="(item, index) in ticketList" :key="index"
-              class=" font-light text-sm shadow rounded-lg "
+            class=" font-light text-sm shadow-lg rounded-lg mx-1 "
           >
 
             <button class="w-full h-full text-left p-4 px-5 rounded-lg"
@@ -91,9 +91,9 @@
 
     async created () {
 
-     let x =  await this.fetchTicketList()
+      let x =  await this.fetchTicketList()
 
-        this.isLoading = false
+      this.isLoading = false
       if (x.length != 0){
         this.isEmpty = false;
       }
@@ -120,7 +120,14 @@
 
         this.itemSelected.id = this.itemSelected.id + ''
       },
-      momentDate(date) {return moment(date).fromNow()}
+
+      momentDate(date) {return moment(date).fromNow()},
+
+      emitCredit() {
+        this.$parent.$emit('updateCredit', true);
+
+      }
+
 
 
     },

@@ -101,10 +101,13 @@
 
         <div class="flex flex-col px-5">
 
-          <p class="font-bold text-lg w-full">Your Total</p>
-          <p class="w-full py-4 font-bold text-4xl text-gray-500 antialiased">{{ total }}</p>
+          <p class="font-bold text-lg w-full text-gray-400">Your Total</p>
+          <p class="w-full py-4 font-bold text-4xl text-gray-600 antialiased">{{ total }}</p>
 
-          <button class="bg-red-400 font-bold rounded-lg w-full h-full p-4 text-white"> Finish</button>
+          <button class="font-bold rounded-lg w-full h-full p-4 text-white "
+            :disabled=isFormValid
+            v-bind:class="isFormValid ? 'bg-red-400 hover:bg-red-300' : 'bg-gray-200'"
+          > Finish</button>
         </div>
 
 
@@ -120,11 +123,13 @@
   export default {
     layout: 'app_layout',
 
+
     created() {
       this.fetchRoutes()
     },
     computed : {
-      faMapMarkerAlt () {return faMapMarkerAlt}
+      faMapMarkerAlt () {return faMapMarkerAlt},
+      isFormValid(){return this.valid}
     },
 
     components : {
@@ -180,9 +185,11 @@
 
         if (res.length == 0){
           this.total = "Route is not available"
+          this.valid = false
           return
         }
         this.total = "P " + (parseFloat(res[0].price) * parseFloat(this.passengers)).toFixed(2)
+        this.valid=true
       },
 
 
@@ -203,6 +210,7 @@
         total: 'P 0.00',
         passengers: 1,
 
+        valid: false,
 
         locationQuery : {
           from: '',

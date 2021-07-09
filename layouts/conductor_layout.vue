@@ -82,6 +82,7 @@
 <script>
 
   import { faBars, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+  import Swal from 'sweetalert2'
 
 
 
@@ -102,7 +103,18 @@
       toggleNav() {
         this.isNavShow = !this.isNavShow
       },
-      logout () {
+      async logout () {
+
+        let confirm = await Swal.fire({
+          title: '',
+          text: 'Logout?',
+          icon:'question',
+          showCancelButton: true
+        });
+
+        if (!confirm.isConfirmed) {
+          return
+        }
 
         this.$strapi.logout()
         this.$router.push('/')
@@ -134,8 +146,14 @@
             to: '/conductor/scan',
             title: 'Scan'
           },
-
-
+          {
+            to: '/conductor/history',
+            title: 'History'
+          },
+          {
+            to: '/conductor/account',
+            title: 'Account'
+          },
         ]
       }
 

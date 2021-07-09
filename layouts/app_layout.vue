@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-screen bg-white app-grid">
+  <div class="w-full h-screen bg-white app-grid overflow-hidden">
     <nav class="col-start-1 col-end-13
       bg-white
       shadow-lg
@@ -23,7 +23,7 @@
 
       <div class="float-right h-full  w-auto mr-0 md:mr-4
         grid place-content-center">
-        <Coins class="my-auto"></Coins>
+        <Coins class="my-auto" :trigger=trigger ></Coins>
       </div>
 
     </nav>
@@ -84,6 +84,7 @@
   import { faBars, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
   import  Coins  from '~/components/Coins.vue'
 
+  import Swal from 'sweetalert2'
 
 
   export default {
@@ -103,13 +104,25 @@
       toggleNav() {
         this.isNavShow = !this.isNavShow
       },
-      logout () {
+      async logout () {
+        let confirm = await Swal.fire({
+          title: '',
+          text: 'Logout?',
+          icon:'question',
+          showCancelButton: true
 
-        this.$strapi.logout()
-        this.$router.push('/')
+        });
+
+        if (!confirm.isConfirmed) {
+          return
+        }
+
+        await this.$strapi.logout()
+        await this.$router.push('/')
       },
       onUpdateCredit() {
         console.log('requesting update on credit')
+        this.trigger = Math.random(0,200)
       }
     },
 
@@ -126,6 +139,8 @@
     data() {
       return {
         isNavShow: true,
+        trigger: 0,
+
 
         links : [
           {

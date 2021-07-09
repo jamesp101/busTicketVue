@@ -10,10 +10,9 @@
           shadow-lg
           rounded-lg
           hover:bg-red-50
-          p-4
-          "
+          p-4"
+          @click="purchaseCredit(50)"
         >
-
           <div class="w-full flex font-bold">
             <font-awesome-icon :icon=faCoins
               class="text-2xl text-red-500 h-full"/>
@@ -33,6 +32,7 @@
           hover:bg-red-50
           p-4
           "
+          @click="purchaseCredit(100)"
         >
 
           <div class="w-full flex font-bold">
@@ -53,9 +53,8 @@
           shadow-lg
           rounded-lg
           hover:bg-red-50
-          p-4
-          "
-          @click=emitCredit
+          p-4 "
+          @click="purchaseCredit(210)"
         >
 
           <div class="w-full flex font-bold">
@@ -76,8 +75,8 @@
           shadow-lg
           rounded-lg
           hover:bg-red-50
-          p-4
-          "
+          p-4"
+          @click="purchaseCredit(525)"
         >
 
           <div class="w-full flex font-bold">
@@ -101,6 +100,7 @@
 <script>
 
   import { faCoins } from '@fortawesome/free-solid-svg-icons'
+  import Swal from 'sweetalert2'
 
   export default {
 
@@ -108,11 +108,48 @@
     computed :{
       faCoins () { return faCoins }
     },
+    mounted () {
+      console.log(this.$strapi.user.current_coins)
+
+    },
+    mounted() {
+      this.$strapi.hook('userUpdated', user => {
+        console.log('hook:' ,user)
+      })
+    },
 
     methods: {
       emitCredit() {
-        console.log('Emitting ')
         this.$parent.$emit('updateCredit', true);
+      },
+
+
+      async purchaseCredit(value){
+       let confirm = await  Swal.fire({
+         title: 'Confirm',
+         icon:'warning',
+          text: 'Are you sure you want to purchase this?',
+          showCancelButton: true,
+        })
+
+        if (!confirm.isConfirmed) {
+          return
+        }
+
+        let updateval = {
+          current_coins: this.$strapi.user.current_coins + value
+        }
+
+
+        await this.$strapi.update('users', this.$strapi.user.id, updateval)
+        Swal.fire({
+          title: 'Success',
+          icon: 'success',
+          text: 'You have successfully purchased credits'
+        })
+        //this.$strapi.user.current_coins = this.$strapi.usercurrent_coins + value
+
+        this.emitCredit();
 
       }
 

@@ -105,8 +105,8 @@
           <p class="w-full py-4 font-bold text-4xl text-gray-600 antialiased">{{ total }}</p>
 
           <button class="font-bold rounded-lg w-full h-full p-4 text-white "
-            :disabled=isFormValid
-            v-bind:class="isFormValid ? 'bg-red-400 hover:bg-red-300' : 'bg-gray-200'"
+            v-bind:class="valid ? 'bg-red-400 hover:bg-red-300' : 'bg-gray-200'"
+            @click=purchaseTicket
           > Finish</button>
         </div>
 
@@ -119,6 +119,7 @@
 <script>
   import GeoMap  from '~/components/GeoMap'
   import { faMapMarkerAlt} from '@fortawesome/free-solid-svg-icons'
+  import Swal from 'sweetalert2'
 
   export default {
     layout: 'app_layout',
@@ -129,7 +130,6 @@
     },
     computed : {
       faMapMarkerAlt () {return faMapMarkerAlt},
-      isFormValid(){return this.valid}
     },
 
     components : {
@@ -181,17 +181,70 @@
 
 
         let res = await this.$strapi.find('routes', query)
-
+        console.log(res)
 
         if (res.length == 0){
           this.total = "Route is not available"
           this.valid = false
           return
         }
-        this.total = "P " + (parseFloat(res[0].price) * parseFloat(this.passengers)).toFixed(2)
+        this.totalFloat = (parseFloat(res[0].price) * parseFloat(this.passengers)).toFixed(2)
+        this.total = "P " + this.totalFloat
         this.valid=true
+        this.routeId = res[0].id
+
       },
 
+      emitCredit() {
+        this.$parent.$emit('updateCredit', true);
+      },
+      async purchaseTicket(){
+        if (!this.valid ){
+          return
+        }
+
+        let calculateDiff =  this.$strapi.user.current_coins - this.totalFloat
+
+        if (calculateDiff <= 0){
+          await Swal.fire({
+            icon: 'error',
+            text: 'You have insufficient coins. \n Purchase more coins'
+          })
+          return
+        }
+
+        let confirm = await Swal.fire({
+          text: 'Confirm purchase?',
+          showCancelButton: true,
+          icon: 'question'
+        })
+
+        if (!confirm.isConfirmed) {
+          return
+        }
+
+        let ticket = {
+          user: this.$strapi.user.id,
+          route: this.routeId,
+          status: 'Available',
+          quantity: this.passengers,
+        }
+        await this.$strapi.create('tickets', ticket)
+        await this.$strapi.update('users', this.$strapi.user.id, {
+          current_coins : calculateDiff
+        })
+        await Swal.fire ({
+          title: 'Success',
+          text: 'Successfully Purchased!',
+          icon: 'success',
+          confirmButtonText:'Ok',
+          confirmButtonColor:'bg-red-400'
+        })
+        this.emitCredit()
+        return
+
+
+      }
 
     },
 
@@ -209,8 +262,11 @@
 
         total: 'P 0.00',
         passengers: 1,
+        totalFloat: 0,
 
         valid: false,
+
+        routeId: '',
 
         locationQuery : {
           from: '',

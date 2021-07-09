@@ -10,8 +10,7 @@
       class="text-2xl text-gray-500 h-full animate-spin" />
     </h1>
 
-    <h1 class="font-bold text-gray-400 h-full" v-else > {{myCoins}}</h1>
-
+    <h1 class="font-bold text-gray-500 h-full" v-else > {{myCoins}}</h1>
 
     <nuxt-link to="/app/topup" class="font-bold px-3 h-full"> + </nuxt-link>
 
@@ -29,26 +28,32 @@
       faCoins (){return faCoins},
       faSpinner() {return faSpinner}
     },
-    created(){
-      this.fetchCoinsInfo();
+    watch: {
+      trigger (){
+        this.fetchCoinsInfo()
+      }
     },
-    methods :{
-      async fetchCoinsInfo(){
+    mounted() {
         if (this.$strapi.user == null) {
           this.$router.push('/');
           return;
         }
-        await this.$strapi.fetchUser();
+      this.fetchCoinsInfo()
+    },
 
-        let user = this.$strapi.user
+    methods :{
+      async fetchCoinsInfo(){
+        this.isLoading=true
+
+        let user = await this.$strapi.fetchUser();
         this.myCoins = user.current_coins
         this.isLoading = false
       }
     },
-    props :{
-      coins: String
+    props :[
+      'trigger'
 
-    },
+    ],
     data () {
       return {
         myCoins: 0,

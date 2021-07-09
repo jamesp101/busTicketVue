@@ -51,7 +51,7 @@ export default {
     '@nuxtjs/pwa',
     '@nuxtjs/strapi',
 
-     '~/shared/vueLayers',
+     '~/shared/vuelayers',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -80,6 +80,6 @@ export default {
     }
   },
   strapi: {
-    url : process.env.STRAPI_URL || 'http://192.168.254.103:1337'
+    url : process.env.STRAPI_URL || 'http://localhost:1337'
   }
 }

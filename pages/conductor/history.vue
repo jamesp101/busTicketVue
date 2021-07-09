@@ -1,4 +1,3 @@
-
 <template>
   <main class="container p-0 md:p-5 lg:p-6 w-full h-full">
     <div v-if=isLoading
@@ -14,7 +13,6 @@
         class="text-2xl text-gray-200 h-full"/>
 
       <h1 class="text-gray-500 mt-20">You have no tickets recorded.</h1>
-      <nuxt-link to="/app/purchase" class="text-red-400">Purchase tickets here</nuxt-link>
     </div>
 
     <div v-else class="flex flex-col lg:flex-row h-full">
@@ -26,7 +24,6 @@
             <QrCode renderAs="canvas" size=200 class="w-full" :value="itemSelected.id.toString()" level="H"></QrCode>
           </div>
 
-          <h1 class="mt-4 md:mt-14">Present to the conductor</h1>
           <h1 class="text-gray-600">Ticket ID: {{ itemSelected.id }} </h1>
           <h1>
             Status:
@@ -56,7 +53,7 @@
       </div>
 
       <div class="h-full w-full lg:w-3/12 overflow-auto">
-        <h1>Your Tickets</h1>
+        <h1>Claimed Tickets:</h1>
 
         <ul class="">
           <li v-for="(item, index) in ticketList" :key="index"
@@ -94,7 +91,7 @@
   export default {
 
 
-    layout: 'app_layout',
+    layout: 'conductor_layout',
     components: {
       QrCode,
       Spinner
@@ -122,7 +119,7 @@
     methods : {
       async fetchTicketList() {
         let x = await this.$strapi.find('tickets', {
-          user: this.$strapi.user.id
+          confirmedBy: this.$strapi.user.id
         })
         return x
       },

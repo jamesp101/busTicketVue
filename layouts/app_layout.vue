@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-screen bg-white app-grid overflow-hidden">
+  <div class="w-full h-screen bg-white app-grid overflow-auto">
     <nav class="col-start-1 col-end-13
       bg-white
       shadow-lg

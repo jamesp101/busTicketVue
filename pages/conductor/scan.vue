@@ -110,7 +110,7 @@
           return
         }
 
-        let l = await this.$strapi.update('tickets',1,
+        let l = await this.$strapi.update('tickets',this.$strapi.user.id,
                             {confirmedBy: this.$strapi.user.id,
                              status: 'Claimed'})
 
@@ -126,11 +126,8 @@
         }
 
         this.$router.push('/conductor')
+      },
 
-
-
-
-      }
     },
 
     data (){

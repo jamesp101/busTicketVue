@@ -101,6 +101,7 @@
 
   import { faCoins } from '@fortawesome/free-solid-svg-icons'
   import Swal from 'sweetalert2'
+  import valid from 'card-validator'
 
   export default {
 
@@ -125,6 +126,7 @@
 
 
       async purchaseCredit(value){
+        this.getMethod()
        let confirm = await  Swal.fire({
          title: 'Confirm',
          icon:'warning',
@@ -140,6 +142,9 @@
           current_coins: this.$strapi.user.current_coins + value
         }
 
+        if(!( await this.getMethod() )){
+          return
+        }
 
         await this.$strapi.update('users', this.$strapi.user.id, updateval)
         Swal.fire({
@@ -150,6 +155,50 @@
         //this.$strapi.user.current_coins = this.$strapi.usercurrent_coins + value
 
         this.emitCredit();
+
+      },
+
+
+      async getMethod(){
+        let method = await Swal.fire({
+          text: 'Select method',
+          input: 'select',
+          inputOptions: {
+            master: 'Master',
+            visa: 'Visa'
+          },
+          showCancelButton: true
+        })
+
+        if(method.value == 'master'){
+          let m = await Swal.fire({
+            text: 'Input MasterCard number',
+            input: 'text',
+            showCancelButton: true,
+            inputValidator: value =>{
+
+              if(!valid.number(value).isValid){
+                return 'MasterCard is not valid'
+              }
+            }
+
+          })
+          return m.isConfirmed
+        }
+        if(method.value == 'visa'){
+          let m = await Swal.fire({
+            text: 'Input Visa number',
+            input: 'text',
+            showCancelButton: true,
+            inputValidator: value =>{
+
+              if(!valid.number(value).isValid){
+                return 'Visa is not valid'
+              }
+            }
+          })
+            return m.isConfirmed
+        }
 
       }
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="container h-full w-full mx-auto">
+  <div class="container h-full w-full mx-auto overflow-auto">
     <div class="h-full w-full flex flex-col md:flex-row">
 
       <!-- map -->
